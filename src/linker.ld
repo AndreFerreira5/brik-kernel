@@ -1,9 +1,9 @@
 ENTRY(start)
 SECTIONS
 {
-    . = 1M;    /* Set the base memory address for the kernel */
+    . = 1M;
 
-    .text ALIGN(4K) : AT(ADDR(.text) - 1M)
+    .text ALIGN(4K) :
     {
         *(.multiboot)
         *(.text)
@@ -18,7 +18,5 @@ SECTIONS
     {
         *(.bss)
     }
-
-    /DISCARD/ : { *(.eh_frame) }
 }
 
