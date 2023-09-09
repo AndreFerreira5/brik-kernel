@@ -3,9 +3,13 @@ SECTIONS
 {
     . = 1M;
 
+    .boot ALIGN(4K):
+    {
+        *(.multiboot_header)
+    }
+
     .text ALIGN(4K) :
     {
-        *(.multiboot)
         *(.text)
     }
 

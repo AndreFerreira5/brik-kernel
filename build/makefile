@@ -3,17 +3,23 @@ GCC = gcc
 LD = ld
 GRUB_MKRESCUE = grub-mkrescue
 
-NASMFLAGS = -f elf32
-GCCFLAGS = -m32
-LDFLAGS = -m elf_i386 -T $(SRC_DIR)/linker.ld
+NASMFLAGS = -f elf64
+GCCFLAGS = -m64
+LDFLAGS = -static -m elf_x86_64 -T $(SRC_DIR)/linker.ld
 
 SRC_DIR = ../src
+BOOT_DIR = $(SRC_DIR)/boot
 
-OBJECTS = boot.o kernel.o keyboard.o source.o
+OBJECTS = multiboot_header.o boot.o kernel.o
 
 all: brik_kernel.iso
 
+.PHONY: all clean debug
+
 %.o: $(SRC_DIR)/%.asm
+	$(NASM) $(NASMFLAGS) $< -o $@
+
+%.o: $(BOOT_DIR)/%.asm
 	$(NASM) $(NASMFLAGS) $< -o $@
 
 %.o: $(SRC_DIR)/%.c
@@ -28,3 +34,6 @@ brik_kernel.iso: kernel
 
 clean:
 	rm -f $(OBJECTS) kernel brik_kernel.iso
+
+debug:
+	qemu-system-x86_64 -cdrom brik_kernel.iso
