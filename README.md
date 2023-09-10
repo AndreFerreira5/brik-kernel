@@ -22,9 +22,10 @@ To experiment with Brik Kernel, make sure you have the required tools installed 
    cd build
    make
    ```
-   This will generate a bootable file named ***brik_kernel.iso*** in the same directory.
 3. Run the kernel:
-   You can run Brik Kernel using any virtualization program such as QEMU and the bootable image generated previously.
+   ```sh
+   make debug
+   ```
 
 ## Contributing
 
