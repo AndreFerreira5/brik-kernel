@@ -1,8 +1,7 @@
-//
-// Created by g512 on 9/10/23.
-//
-
 #ifndef BRIKERNEL_IDT_H
 #define BRIKERNEL_IDT_H
+
+#define IDT_DE_DIV_ZERO 0
+#define IDT_DE_PAGE_FAULT 14
 
 #endif //BRIKERNEL_IDT_H
