@@ -10,10 +10,12 @@ LDFLAGS = -static -m elf_x86_64 -T $(SRC_DIR)/linker.ld
 SRC_DIR = ../src
 BOOT_DIR = $(SRC_DIR)/boot
 OUTPUT_DIR = output
+INTERRUPTS_DIR = $(SRC_DIR)/interrupts
 
 OBJECTS = 	$(OUTPUT_DIR)/multiboot_header.o \
 			$(OUTPUT_DIR)/paging.o \
 			$(OUTPUT_DIR)/gdt.o \
+			$(OUTPUT_DIR)/idt.o \
 			$(OUTPUT_DIR)/boot.o \
 			$(OUTPUT_DIR)/kernel.o
 
@@ -28,6 +30,9 @@ $(OUTPUT_DIR)/%.o: $(BOOT_DIR)/%.asm
 	$(NASM) $(NASMFLAGS) $< -o $@
 
 $(OUTPUT_DIR)/%.o: $(SRC_DIR)/%.c
+	$(GCC) $(GCCFLAGS) -c $< -o $@
+
+$(OUTPUT_DIR)/%.o: $(INTERRUPTS_DIR)/%.c
 	$(GCC) $(GCCFLAGS) -c $< -o $@
 
 $(OUTPUT_DIR)/kernel: $(OBJECTS)
