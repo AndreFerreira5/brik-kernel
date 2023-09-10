@@ -9,31 +9,36 @@ LDFLAGS = -static -m elf_x86_64 -T $(SRC_DIR)/linker.ld
 
 SRC_DIR = ../src
 BOOT_DIR = $(SRC_DIR)/boot
+OUTPUT_DIR = output
 
-OBJECTS = multiboot_header.o boot.o kernel.o
+OBJECTS = 	$(OUTPUT_DIR)/multiboot_header.o \
+			$(OUTPUT_DIR)/paging.o \
+			$(OUTPUT_DIR)/gdt.o \
+			$(OUTPUT_DIR)/boot.o \
+			$(OUTPUT_DIR)/kernel.o
 
-all: brik_kernel.iso
+all: $(OUTPUT_DIR)/brik_kernel.iso
 
 .PHONY: all clean debug
 
-%.o: $(SRC_DIR)/%.asm
+$(OUTPUT_DIR)/%.o: $(SRC_DIR)/%.asm
 	$(NASM) $(NASMFLAGS) $< -o $@
 
-%.o: $(BOOT_DIR)/%.asm
+$(OUTPUT_DIR)/%.o: $(BOOT_DIR)/%.asm
 	$(NASM) $(NASMFLAGS) $< -o $@
 
-%.o: $(SRC_DIR)/%.c
+$(OUTPUT_DIR)/%.o: $(SRC_DIR)/%.c
 	$(GCC) $(GCCFLAGS) -c $< -o $@
 
-kernel: $(OBJECTS)
+$(OUTPUT_DIR)/kernel: $(OBJECTS)
 	$(LD) $(LDFLAGS) -o $@ $(OBJECTS)
 
-brik_kernel.iso: kernel
-	cp kernel brik_iso/boot/kernel
+$(OUTPUT_DIR)/brik_kernel.iso: $(OUTPUT_DIR)/kernel
+	cp $(OUTPUT_DIR)/kernel brik_iso/boot/kernel
 	$(GRUB_MKRESCUE) -o $@ brik_iso/
 
 clean:
-	rm -f $(OBJECTS) kernel brik_kernel.iso
+	rm -f $(OUTPUT_DIR)/$(OBJECTS) $(OUTPUT_DIR)/kernel $(OUTPUT_DIR)/brik_kernel.iso
 
 debug:
-	qemu-system-x86_64 -cdrom brik_kernel.iso
+	qemu-system-x86_64 -cdrom $(OUTPUT_DIR)/brik_kernel.iso
