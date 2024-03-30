@@ -1,4 +1,7 @@
 # BRIK KERNEL
+
+development halted for now :(
+
 ## Build
 
 1. Clone the repository:
