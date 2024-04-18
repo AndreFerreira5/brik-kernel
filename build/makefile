@@ -16,6 +16,7 @@ OBJECTS = 	$(OUTPUT_DIR)/multiboot_header.o \
 			$(OUTPUT_DIR)/paging.o \
 			$(OUTPUT_DIR)/gdt.o \
 			$(OUTPUT_DIR)/idt.o \
+			$(OUTPUT_DIR)/idt_asm.o \
 			$(OUTPUT_DIR)/boot.o \
 			$(OUTPUT_DIR)/kernel.o
 
@@ -34,6 +35,9 @@ $(OUTPUT_DIR)/%.o: $(SRC_DIR)/%.c
 
 $(OUTPUT_DIR)/%.o: $(INTERRUPTS_DIR)/%.c
 	$(GCC) $(GCCFLAGS) -c $< -o $@
+
+$(OUTPUT_DIR)/%_asm.o: $(INTERRUPTS_DIR)/%.asm
+	$(NASM) $(NASMFLAGS) $< -o $@
 
 $(OUTPUT_DIR)/kernel: $(OBJECTS)
 	$(LD) $(LDFLAGS) -o $@ $(OBJECTS)

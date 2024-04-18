@@ -1,7 +1,7 @@
 #include <stdint.h>
 #include "idt.h"
 
-#define IDT_SIZE 512
+#define IDT_SIZE 512 // or 2048
 
 void divideByZeroISR();
 
@@ -41,10 +41,6 @@ void initIDT(){
 void initIDTR(){
     idtr.size = sizeof(idt) - 1; // assign size of interrupt descriptor table
     idtr.address = (uint64_t)&idt; // assign interrupt descriptor table's address
-}
-
-void load_idt(){
-    asm volatile("lidt %0" : : "m" (idtr));
 }
 
 
